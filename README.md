@@ -1,7 +1,7 @@
 **A Template repo to speed up your Unreal Engine development**
 
 - You can fork it, or use it as a [Template Repo](https://css-tricks.com/using-github-template-repos-to-jump-start-static-site-projects/)
-- Make sure whatever name you give it is short, if you intent to do CI/CD as you may run over the 256 character limit on windows
+- Make sure whatever name you give it is short, if you intent to do CI/CD as you may run over the 256 character limit on windows. The [Long FileNames](/Tools/LongFileNamesEnabled.reg) may help with this.
 - Make sure you have [git Large File Storage](https://docs.github.com/en/github/managing-large-files/configuring-git-large-file-storage) enabled
 
 # Working in the template repo
