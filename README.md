@@ -14,12 +14,12 @@ the **/Projects/** folder is where you should create your various Unreal Engine 
 
 ## Setting up CI/CD
 
-- You will need to add your [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) to [GitHub Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named PAT. It is then available to your actions runners as ${{secrets.PAT}}.
+You will need to add your [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) to [GitHub Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named PAT. It is then available to your actions runners as ${{secrets.PAT}}.
 
-#### GitHub Actions Runners
+### GitHub Actions Runners
 There is an included wokflow that can be altered to run on GitHub's Action runners, unfortunatly it will run out of space on those runner at this time
 
-#### Self Hosted Runners
+### Self Hosted Runners
 There is an included workflow that will run on a [self hosted runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners). 
 When you setup the self hosted runner, you will need to make the paths as short as possible. I suggest the following changes
 - unzip it in a folder called build at the root of a drive (C:\ or D:\)
@@ -30,7 +30,8 @@ when everything runs locally it will end up in a structure like C:\build\w\UE\UE
 
 You can switch the github repo that you use for the submodule. In theory, simply editing the [.gitmodules](.gitmodules) file with an updated URL of your Unreal Engine fork (replacing https://github.com/EpicGames/UnrealEngine.git), and then re-syncing the submodule [should do the trick](https://stackoverflow.com/questions/913701/how-to-change-the-remote-repository-for-a-git-submodule).
 
-If you want to automate 
-- You will need to add your [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) to [GitHub Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named PAT. This token needs to have access to your UnrealEngine fork, and the main [UnrealEngine](https://github.com/epicgames/unrealengine) repo. 
 
 ### Keeping your own Fork of Unreal Engine in sync
+
+If you want to automate syncronizing your fork with the main UnrealEngine repo you can use the [included github action to do so](.github/workflows/UE4-Mirror-Release.yml)
+- You will need to add your [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) to [GitHub Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named PAT. This token needs to have access to your UnrealEngine fork, and the main [UnrealEngine](https://github.com/epicgames/unrealengine) repo. 
