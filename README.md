@@ -14,7 +14,7 @@ the **/Projects/** folder is where you should create your various Unreal Engine 
 
 ## Setting up CI/CD
 
-- You will need to add your
+- You will need to add your [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) to [GitHub Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named PAT. It is then available to your actions runners as ${{secrets.PAT}}.
 
 **GitHub Actions Runners**
 - There is an included wokflow that runs on GitHub's Action runners, unfortunatly it will run out of space on those runner at this time
