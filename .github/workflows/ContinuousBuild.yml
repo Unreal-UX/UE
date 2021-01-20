@@ -23,7 +23,7 @@ env:
   BUILD_PROJECT: '"Engine\UE4"'
   BUILD_TYPE: Build
 
-  GAME_SOLUTION_FOLDER: Shooter 
+  GAME_SOLUTION_FOLDER: Shooter #change this to the name of your game
   BUILD_GAME: TBD
   PACKAGED_NAME: UE4-Built
   #COMPILED_UE4_DIRECTORY: .\UE\
