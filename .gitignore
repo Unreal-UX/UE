@@ -1,0 +1,6 @@
+
+#global GitIgnore patterns
+
+.vs
+.vscode
+/Projects/Shooter/Saved
