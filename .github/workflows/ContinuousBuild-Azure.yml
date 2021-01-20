@@ -24,6 +24,8 @@ env:
   BUILD_PROJECT: '"Engine\UE4"'
   BUILD_TYPE: Build
 
+  AZURE_RESOURCE_GROUP: "UnrealBuilder"
+  AZURE_VM_NAME: "Windows-Builder"
   GAME_SOLUTION_FOLDER: Shooter 
   BUILD_GAME: TBD
   PACKAGED_NAME: UE4-Built
@@ -47,7 +49,7 @@ jobs:
         azPSVersion: '3.1.0'
         inlineScript: |
           az account show
-          Start-AzVM -ResourceGroupName "UnrealBuilder" -Name "Windows-Builder" 
+          Start-AzVM -ResourceGroupName ${{env.AZURE_RESOURCE_GROUP}} -Name ${{env.AZURE_VM_NAME}}
     - name: pass control to next 
       shell: sh
       run: echo "VM Started. Passing control to the next step"
@@ -221,7 +223,7 @@ jobs:
         azPSVersion: '3.1.0'
         inlineScript: |
           az account show
-          Stop-AzVM -ResourceGroupName "UnrealBuilder" -Name "Windows-Builder" -Force
+          Stop-AzVM -ResourceGroupName ${{env.AZURE_RESOURCE_GROUP}} -Name ${{env.AZURE_VM_NAME}} -Force
     - name: pass control to next 
       shell: sh
       run: echo "VM Shutdown, moving on"
