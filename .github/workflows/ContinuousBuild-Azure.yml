@@ -1,0 +1,227 @@
+name: UE4 Full Workflow on a Azure VM that is started & stopped
+
+on: 
+  push:
+    paths:
+      - 'Projects/**'
+    branches: 
+      - main 
+      
+  workflow_dispatch:
+
+  schedule:
+    - cron: "0 11 * * *"
+
+env:
+  # Path to the solution file relative to the root of the project.
+  UE_SOLUTION_FILE_PATH: .\UnrealEngine\UE4.sln
+
+  # Configuration type to build.
+  # You can convert this to a build matrix if you need coverage of multiple configuration types.
+  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+  BUILD_CONFIGURATION: '"Development Editor"'
+  BUILD_PLATFORM: Win64 
+  BUILD_PROJECT: '"Engine\UE4"'
+  BUILD_TYPE: Build
+
+  GAME_SOLUTION_FOLDER: Shooter 
+  BUILD_GAME: TBD
+  PACKAGED_NAME: UE4-Built
+  PACKAGED_FULLEDITOR_NAME: Full-Editor-Package
+  #COMPILED_UE4_DIRECTORY: .\UE\
+  COMPILED_UE4_DIRECTORY: .\UnrealEngine\
+  
+jobs:
+  LaunchAzureVM:
+    name: launch the AzureVM
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}    
+        enable-AzPSSession: true 
+    - name: Azure powershell script - StartVM
+      uses: azure/powershell@v1
+      with:
+        azPSVersion: '3.1.0'
+        inlineScript: |
+          az account show
+          Start-AzVM -ResourceGroupName "UnrealBuilder" -Name "Windows-Builder" 
+    - name: pass control to next 
+      shell: sh
+      run: echo "VM Started. Passing control to the next step"
+  
+  UnrealEngineWindows:
+    name: Win64 - Setup, Download Dependancies, Generate Project Files, Compile and Package UE4
+    runs-on: [self-hosted, windows, x64]
+    #runs-on: windows-latest
+    needs: [LaunchAzureVM]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'     #required for Unreal Submodule
+          token: ${{secrets.PAT}}     #required for Unreal Submodule
+          lfs: true
+          #ssh-key: ${{secrets.SSH_PRIVATE_KEY}}  
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Setup unreal prereques
+        shell: cmd
+        run: call .\UnrealEngine\Setup.bat
+    
+      - name: Setup unreal project files
+        shell: cmd
+        run: call .\UnrealEngine\GenerateProjectFiles.bat
+
+      - name: Build UE4
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        # Add additional options to the MSBuild command line here (like platform or verbosity level).
+        # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+        run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:Platform=${{env.BUILD_PLATFORM}} -target:${{env.BUILD_PROJECT}} ${{env.UE_SOLUTION_FILE_PATH}}
+    
+      - name: Package UE4
+        shell: cmd
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        #run: call .\UnrealEngine\Engine\Build\BatchFiles\RunUAT.bat BuildGraph -script=Engine/Build/InstalledEngineBuild.xml  -target="Make Installed Build Win64"  -set:WithMac=false -set:WithIOS=false -set:HostPlatformOnly=true -set:WithDDC=false 
+        #run: call .\UnrealEngine\Engine\Build\BatchFiles\RunUAT.bat BuildGraph -Script=Engine/Build/Graph/Examples/BuildEditorAndTools.xml -Target="Copy To Staging Directory" 
+        run: call .\UnrealEngine\Engine\Build\BatchFiles\RunUAT.bat BuildGraph -Script=Engine/Build/Graph/Examples/BuildEditorAndTools.xml -Target="Submit To Perforce For UGS"
+        
+      - name: Upload Built UE4 Engine
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{env.PACKAGED_NAME}}
+          #path: .\UnrealEngine\LocalBuilds\ArchiveForUGS\Perforce\Unknown-Editor.zip
+          path: .\UnrealEngine\LocalBuilds\ArchiveForUGS\Staging\*
+          retention-days: 5
+        
+  BuildGame-SelfHosted:
+    name: Build A Game - Self Hosted Runner
+    runs-on: [self-hosted, windows, x64]
+    needs: [UnrealEngineWindows]
+    
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{secrets.PAT}} #required for Unreal Submodule
+          lfs: true
+          
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1
+        
+      - name: Generate Unreal Project Files
+        shell: cmd
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: call .\UnrealEngine\Engine\Binaries\DotNET\UnrealBuildTool.exe -projectfiles -project=".\..\..\..\Projects\${{env.GAME_SOLUTION_FOLDER}}\${{env.GAME_SOLUTION_FOLDER}}.uproject" -game -engine
+              
+      - name: Build Game Project (Development) ${{env.BUILD_PLATFORM}}
+        shell: cmd
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: call .\UnrealEngine\Engine\Build\BatchFiles\Build.bat ${{env.GAME_SOLUTION_FOLDER}} ${{env.BUILD_PLATFORM}} Development ".\..\..\..\Projects\${{env.GAME_SOLUTION_FOLDER}}\${{env.GAME_SOLUTION_FOLDER}}.uproject"  -WaitMutex -FromMsBuild 
+        
+  BuildGame-Cloud:
+    name: Build A Game - Cloud Runner
+    runs-on: [windows-latest]
+    needs: [UnrealEngineWindows]
+    
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{secrets.PAT}} #required for Unreal Submodule
+          lfs: true
+          
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1
+        
+      - name: Setup unreal prereques
+        shell: cmd
+        run: call .\UnrealEngine\Setup.bat
+    
+      - name: Setup unreal project files
+        shell: cmd
+        run: call .\UnrealEngine\GenerateProjectFiles.bat
+        
+      - name: Extract Build Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{env.PACKAGED_NAME}}
+          path: ${{env.COMPILED_UE4_DIRECTORY}}
+        
+      - name: Generate Unreal Project Files
+        shell: cmd
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: call ${{env.COMPILED_UE4_DIRECTORY}}Engine\Binaries\DotNET\UnrealBuildTool.exe -projectfiles -project=".\..\..\..\Projects\${{env.GAME_SOLUTION_FOLDER}}\${{env.GAME_SOLUTION_FOLDER}}.uproject" -game -engine
+              
+      - name: Build Game Project (Development) ${{env.BUILD_PLATFORM}}
+        shell: cmd
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: call ${{env.COMPILED_UE4_DIRECTORY}}Engine\Build\BatchFiles\Build.bat ${{env.GAME_SOLUTION_FOLDER}} ${{env.BUILD_PLATFORM}} Development ".\..\..\..\Projects\${{env.GAME_SOLUTION_FOLDER}}\${{env.GAME_SOLUTION_FOLDER}}.uproject"  -WaitMutex -FromMsBuild
+
+  PackageEngineWindows:
+    name: Package Unreal Editor
+    runs-on: [self-hosted, windows, x64]
+    #runs-on: windows-latest
+    needs: [LaunchAzureVM]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'     #required for Unreal Submodule
+          token: ${{secrets.PAT}}     #required for Unreal Submodule
+          lfs: true
+          #ssh-key: ${{secrets.SSH_PRIVATE_KEY}}  
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Setup unreal prereques
+        shell: cmd
+        run: call .\UnrealEngine\Setup.bat
+    
+      - name: Setup unreal project files
+        shell: cmd
+        run: call .\UnrealEngine\GenerateProjectFiles.bat
+
+      - name: Package UE4
+        shell: cmd
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: call .\UnrealEngine\Engine\Build\BatchFiles\RunUAT.bat BuildGraph -script=Engine/Build/InstalledEngineBuild.xml  -target="Make Installed Build Win64"  -set:WithMac=false -set:WithIOS=false -set:HostPlatformOnly=true -set:WithDDC=false 
+        
+      - name: Upload Built UE4 Engine
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{env.PACKAGED_FULLEDITOR_NAME}}
+          #path: .\UnrealEngine\LocalBuilds\ArchiveForUGS\Perforce\Unknown-Editor.zip
+          path: .\UnrealEngine\LocalBuilds\Engine\Window\*
+          retention-days: 5
+          
+  ShutdownAzureVM:
+    name: shutdown the AzureVM
+    runs-on: ubuntu-latest
+    needs: [LaunchAzureVM, BuildGame-SelfHosted, PackageEngineWindows,UnrealEngineWindows] # BuildGame-Cloud, ]
+    if: ${{ always() }}
+    steps: 
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true 
+    - name: Azure powershell - Stop VM
+      uses: azure/powershell@v1
+      with:
+        azPSVersion: '3.1.0'
+        inlineScript: |
+          az account show
+          Stop-AzVM -ResourceGroupName "UnrealBuilder" -Name "Windows-Builder" -Force
+    - name: pass control to next 
+      shell: sh
+      run: echo "VM Shutdown, moving on"
