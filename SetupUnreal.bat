@@ -4,6 +4,7 @@ pushd "%~dp0"
 git status
 git submodule init
 git submodule update
+git lfs install
 cd ./UnrealEngine/
 call setup.bat --force 
 call GenerateProjectFiles.bat
