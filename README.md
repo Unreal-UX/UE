@@ -35,3 +35,6 @@ You can switch the github repo that you use for the submodule. In theory, simply
 
 If you want to automate syncronizing your fork with the main UnrealEngine repo you can use the [included github action to do so](.github/workflows/UE4-Mirror-Release.yml)
 - You will need to add your [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) to [GitHub Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named PAT. This token needs to have access to your UnrealEngine fork, and the main [UnrealEngine](https://github.com/epicgames/unrealengine) repo. 
+
+# Git LFS
+_Work in progress_ : This repo should enable [Git LFS](https://stefanperales.com/blog/unreal-engine-4-and-git-lfs/#setting-up-git-lfs-in-a-ue4-project) by default. This is a recient change and I'm still determining if Git LFS and Git Submodule play well together.
