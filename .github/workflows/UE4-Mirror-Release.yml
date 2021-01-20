@@ -1,0 +1,47 @@
+name: Create and Merge a PR of Release to this Repo
+
+on:
+  #schedule: #uncomment this to run on the Cron schedule
+  #  - cron: '00 03 * * *' # this cron job runs daily
+      
+  workflow_dispatch: # on button click
+
+env:
+    Owner: #replace tihs with the owner of your unreal engien fork 
+    Repo: UnrealEngine  #this should be the repo name of your unreal engine fork
+    Branch: "release" 
+    ForceMerge: true 
+    Source_Owner: EpicGames 
+    Source_Repo: UnrealEngine 
+    Source_Branch: "release"
+
+jobs:
+  sync_with_upstream:
+    runs-on: ubuntu-latest
+    name: sync fork
+
+    steps:
+    # Step 1: run a standard checkout action, provided by github
+    - name: Checkout Image Tools
+      uses: actions/checkout@v2
+      with:
+        repository: Unreal-UX/KeepUnrealForkUpdated
+        path: UE4Tools
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+
+    - name: Restore Dependancies
+      run: dotnet restore UE4Tools/
+
+    - name: Build Image Tools
+      run: dotnet build UE4Tools/ --configuration Release
+      
+    - name: Attempting to create and merge PR
+      run: dotnet  ${{github.workspace}}/UE4Tools/bin/Release/netcoreapp3.1/KeepUE4Updated.dll ${{ env.Owner}} ${{env.Repo}} ${{env.Branch}} ${{env.ForceMerge}} ${{env.Source_Owner}} ${{env.Source_Repo}} ${{env.Source_Branch}}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }} #this PAT must have access to: The UnrealEngine repo, and your fork of the Unreal Engine Repo
+
+    # Step 4: Print a helpful timestamp for your records (not required, just nice)
+    - name: Timestamp
+      run: date
