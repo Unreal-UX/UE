@@ -7,8 +7,8 @@ on:
   workflow_dispatch: # on button click
 
 env:
-    Owner: #replace tihs with the owner of your unreal engien fork 
-    Repo: UnrealEngine  #this should be the repo name of your unreal engine fork
+    Owner: Unreal-UX #replace tihs with the owner of your unreal engien fork 
+    Repo: UnrealEngine  #this should be the name of your unreal engine fork
     Branch: "release" 
     ForceMerge: true 
     Source_Owner: EpicGames 
