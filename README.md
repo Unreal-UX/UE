@@ -17,10 +17,10 @@ the **/Projects/** folder is where you should create your various Unreal Engine 
 You will need to add your [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) to [GitHub Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named PAT. It is then available to your actions runners as ${{secrets.PAT}}.
 
 ### GitHub Actions Runners
-There is an included wokflow that can be altered to run on GitHub's Action runners, unfortunatly it will run out of space on those runner at this time
+There is an included wokflow that can be altered to run on GitHub's Action runners, unfortunatly it will run out of space on those runner at this time, as they are 2 CPU, 7Gigi of ram, and under 20gigs of HD space (14 afaik, but some may be 10gig).
 
 ### Self Hosted Runners
-There is an included workflow that will run on a [self hosted runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners). 
+There are 2 included workflow that will run on a [self hosted runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners). One of the included workflows shows how to start and stop an Azure VM to build on, the other uses your local machine. They both take steps beyond building, and some of those steps may fail, feel free to delete them. 
 When you setup the self hosted runner, you will need to make the paths as short as possible. I suggest the following changes
 - unzip it in a folder called build at the root of a drive (C:\ or D:\)
 - make the working folder called w (full path c:\build\w\ 
