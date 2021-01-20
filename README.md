@@ -24,7 +24,7 @@ There are 2 included workflow that will run on a [self hosted runner](https://do
 When you setup the self hosted runner, you will need to make the paths as short as possible. I suggest the following changes
 - unzip it in a folder called build at the root of a drive (C:\ or D:\ )
 - make the working folder called w (full path c:\build\w\ 
-when everything runs locally it will end up in a structure like C:\build\w\UE\UE\*
+when everything runs locally it will end up in a structure like C:\build\w\UE\UE\ *
 
 ## Switching to your own Fork of Unreal Engine
 
