@@ -1,8 +1,10 @@
-**A Template repo to speed up your Unreal Engine development**
+**A Template repo to speed up your Unreal Engine development on Windows**
 
 - You can fork it, or use it as a [Template Repo](https://css-tricks.com/using-github-template-repos-to-jump-start-static-site-projects/)
 - Make sure whatever name you give it is short, if you intent to do CI/CD as you may run over the 256 character limit on windows. The [Long FileNames](/Tools/LongFileNamesEnabled.reg) may help with this.
 - Make sure you have [git Large File Storage](https://docs.github.com/en/github/managing-large-files/configuring-git-large-file-storage) enabled
+- Running [SetupUnreal.bat](SetupUnreal.bat) should initialize the Unreal Repo as a submodule and add it to your computer, as well as pull dependancies, generate project files, and build once. 
+  - You may find that you are missing [.Net 4.6.2 Dev Pack](https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net462-developer-pack-offline-installer), as well as the [windows 10 sdk](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk) 
 
 # Working in the template repo
 
