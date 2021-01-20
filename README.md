@@ -22,7 +22,7 @@ There is an included wokflow that can be altered to run on GitHub's Action runne
 ### Self Hosted Runners
 There are 2 included workflow that will run on a [self hosted runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners). One of the included workflows shows how to start and stop an Azure VM to build on, the other uses your local machine. They both take steps beyond building, and some of those steps may fail, feel free to delete them. 
 When you setup the self hosted runner, you will need to make the paths as short as possible. I suggest the following changes
-- unzip it in a folder called build at the root of a drive (C:\ or D:\)
+- unzip it in a folder called build at the root of a drive (C:\ or D:\ )
 - make the working folder called w (full path c:\build\w\ 
 when everything runs locally it will end up in a structure like C:\build\w\UE\UE\*
 
