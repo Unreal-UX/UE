@@ -1,6 +1,6 @@
 **A Template repo to speed up your Unreal Engine development on Windows**
 
-- You can use it as a Template Repo](https://css-tricks.com/using-github-template-repos-to-jump-start-static-site-projects/) or fork it. _I would reccommend using it as a template so you can make your work [private](https://gist.github.com/0xjac/85097472043b697ab57ba1b1c7530274)_.
+- You can use it as a [Template Repo](https://css-tricks.com/using-github-template-repos-to-jump-start-static-site-projects/) or fork it. _I would reccommend using it as a template so you can make your work [private](https://gist.github.com/0xjac/85097472043b697ab57ba1b1c7530274)_.
 - Make sure whatever name you give it is short, if you intent to do CI/CD. This will help save you from running over the 256 character limit on windows. The [Long FileNames](/Tools/LongFileNamesEnabled.reg) may help with this, but there are intermittent reports of success.
 - Make sure you have [git Large File Storage](https://docs.github.com/en/github/managing-large-files/configuring-git-large-file-storage) enabled
 - Running [SetupUnreal.bat](SetupUnreal.bat) should initialize the Unreal Repo as a submodule and add it to your computer, as well as pull dependancies, generate project files, and build once. 
