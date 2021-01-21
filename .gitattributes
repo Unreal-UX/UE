@@ -24,4 +24,8 @@
 *.xcf filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 
-# Should add some binary files in the future
+# Executables & Binaries
+*.exe filter=lfs diff=lfs merge=lfs binary
+*.pdb filter=lfs diff=lfs merge=lfs binary
+*.dll filter=lfs diff=lfs merge=lfs binary
+*.lib filter=lfs diff=lfs merge=lfs binary
