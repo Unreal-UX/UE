@@ -193,6 +193,11 @@ UnrealEngine/Content/
 # Ignore the headers and cpp files in the clang toolchain on Linux
 **/Engine/Extras/ThirdPartyNotUE/SDKs/HostLinux/**
 
-
+# Make sure not to sync the generated files
 /Projects/**/Intermediate
 /Projects/**/DerivedDataCache
+
+
+# Saved Config Files
+**/Saved/Config/**
+**/Saved/Autosaves/**
