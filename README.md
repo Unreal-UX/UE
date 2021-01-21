@@ -37,4 +37,4 @@ If you want to automate syncronizing your fork with the main UnrealEngine repo y
 - You will need to add your [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) to [GitHub Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) named PAT. This token needs to have access to your UnrealEngine fork, and the main [UnrealEngine](https://github.com/epicgames/unrealengine) repo. 
 
 # Git LFS
-_Work in progress_ : This repo should enable [Git LFS](https://stefanperales.com/blog/unreal-engine-4-and-git-lfs/#setting-up-git-lfs-in-a-ue4-project) by default. This is a recient change and I'm still determining if Git LFS and Git Submodule play well together.
+This repo enables [Git LFS](https://stefanperales.com/blog/unreal-engine-4-and-git-lfs/#setting-up-git-lfs-in-a-ue4-project) by default. This is a recient change, but should make things better. GitHub limits a push to 2gb, so if you are working with large files, you may need to split up the 'git push' calls.
