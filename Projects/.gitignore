@@ -201,3 +201,10 @@ UnrealEngine/Content/
 # Saved Config Files
 **/Saved/Config/**
 **/Saved/Autosaves/**
+
+# Let's make sure we include our content
+!**/Content/**
+
+
+# need to carefully manage the binaries folder, don't have a mask for that yet
+**/Binaries/Win64/**
