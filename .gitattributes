@@ -74,6 +74,8 @@ Projects/**/Binaries/** filter=lfs diff=lfs merge=lfs binary
 *.lld filter=lfs diff=lfs merge=lfs binary
 *.dbg filter=lfs diff=lfs merge=lfs binary
 *.glb filter=lfs diff=lfs merge=lfs binary
+*.dsym filter=lfs diff=lfs merge=lfs binary
+*.debug filter=lfs diff=lfs merge=lfs binary
 
 # docs and 3rd party sdk stuff
 *.chm filter=lfs diff=lfs merge=lfs binary
