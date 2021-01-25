@@ -52,6 +52,8 @@ Projects/**/Binaries/** filter=lfs diff=lfs merge=lfs binary
 *.bz2 filter=lfs diff=lfs merge=lfs binary
 *.tgz filter=lfs diff=lfs merge=lfs binary
 *.dmg filter=lfs diff=lfs merge=lfs binary
+*.dsym filter=lfs diff=lfs merge=lfs binary
+*.debug filter=lfs diff=lfs merge=lfs binary
 
 # Executables & Binaries
 *.exe filter=lfs diff=lfs merge=lfs binary
