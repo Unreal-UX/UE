@@ -26,6 +26,8 @@ When you setup the self hosted runner, you will need to make the paths as short 
 - make the working folder called w (full path c:\build\w\ 
 when everything runs locally it will end up in a structure like C:\build\w\UE\UE\ *
 
+_You may also need to set PowerShell to be allowed to execute unsigned powershell script, if you wish to use powershell script. Please see [this](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.1) article._
+
 ## Switching to your own Fork of Unreal Engine
 
 You can switch the github repo that you use for the submodule. In theory, simply editing the [.gitmodules](.gitmodules) file with an updated URL of your Unreal Engine fork (replacing https://github.com/EpicGames/UnrealEngine.git), and then re-syncing the submodule [should do the trick](https://stackoverflow.com/questions/913701/how-to-change-the-remote-repository-for-a-git-submodule).
